@@ -5,7 +5,7 @@
 // ============================================================================
 window.QNA_CONFIG = {
   SUPABASE_URL: 'https://riilihjbhbheimjlgibk.supabase.co',
-  SUPABASE_ANON_KEY: '여기에-anon-public-key-붙여넣기',
+  SUPABASE_ANON_KEY: 'sb_publishable_-G7Hd-ocWHmZ4xK4auDSzw_BGm3D9uh',
 
   // 청중용 페이지 주소 (qr.html 에서 QR 코드로 만들 주소)
   PUBLIC_URL: 'https://ooohje.github.io/KNU_Job_Fair_QnA/',

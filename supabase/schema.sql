@@ -190,7 +190,12 @@ begin
     raise exception 'unauthorized';
   end if;
 
-  with deleted as (delete from public.questions returning 1)
+  -- WHERE 없는 DELETE 는 안전 모드에서 막히므로 id 를 명시적으로 지운다
+  with doomed as (
+    select id from public.questions
+  ), deleted as (
+    delete from public.questions q using doomed d where q.id = d.id returning 1
+  )
   select count(*) into v_count from deleted;
 
   return v_count;
