@@ -23,13 +23,13 @@
 | 파일 | 용도 |
 |---|---|
 | `index.html` | 청중용 — 질문 작성, 내 질문 보기·삭제 |
-| `speaker.html` | 강연자용 — 비밀 코드 입장, 질문 리스트, 답변 완료 토글, 글자 크기 조절, 전체 초기화 |
+| `admin/index.html` | 강연자용 — 비밀 코드 입장, 질문 리스트, 답변 완료 토글, 글자 크기 조절, 전체 초기화 |
 | `qr.html` | 프로젝터/PPT 투사용 — 접속 QR + URL 크게 |
 
 ## 구조
 
 ```
-index.html / speaker.html / qr.html   화면
+index.html / admin/index.html / qr.html   화면
 styles.css                           디자인 토큰 + 컴포넌트 (공용)
 ui.js                                토스트, 아이콘, 상대시간, FLIP 애니메이션
 db.js                                Supabase 데이터 레이어 (window.QnaDB)
@@ -50,14 +50,14 @@ supabase/set-passphrase.sql           강연자 비밀 코드 설정
 배포 후 주소
 
 - 청중: `https://ooohje.github.io/KNU_Job_Fair_QnA/`
-- 강연자: `https://ooohje.github.io/KNU_Job_Fair_QnA/speaker.html`
+- 강연자: `https://ooohje.github.io/KNU_Job_Fair_QnA/admin`
 - QR 투사: `https://ooohje.github.io/KNU_Job_Fair_QnA/qr.html`
 
 ## 강연 당일 순서
 
 1. 리허설 데이터가 있으면 강연자 화면 하단 **휴지통 버튼**으로 전체 초기화
 2. PPT에 `qr.html` 을 띄우거나 QR 이미지를 캡처해 슬라이드에 넣기
-3. 내 휴대폰에서 `speaker.html` 접속 → 비밀 코드 입력 (한 번 입력하면 저장됨)
+3. 내 휴대폰에서 `/admin` 접속 → 비밀 코드 입력 (한 번 입력하면 저장됨)
 4. 질문이 들어오면 실시간으로 올라옴. 답변한 질문은 **답변 완료** → 아래로 내려감
 5. 무대에서 안 보이면 하단 **A+** 로 글자 크기 키우기
 
