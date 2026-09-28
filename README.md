@@ -5,6 +5,19 @@
 
 빌드 도구 없는 정적 사이트 + Supabase. GitHub Pages에 그대로 올라갑니다.
 
+## 화면 미리보기
+
+실제 배포된 사이트를 캡처한 것입니다.
+
+| 청중 · 질문하기 | 청중 · 내 질문 | 강연자 · 질문 리스트 |
+|---|---|---|
+| <img src="docs/screenshots/01-audience-ask.png" width="240"> | <img src="docs/screenshots/02-audience-mine.png" width="240"> | <img src="docs/screenshots/03-speaker-list.png" width="240"> |
+| 로그인 없이 바로 작성 | 상태 배지와 삭제 버튼 | 미답변 위 · 답변완료 아래 |
+
+프로젝터 투사용 QR 화면
+
+<img src="docs/screenshots/04-qr.png" width="720">
+
 ## 화면
 
 | 파일 | 용도 |

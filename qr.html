@@ -25,6 +25,7 @@
       <p class="qr-kicker" id="kicker">경북대학교 잡페어 · 강연 Q&amp;A</p>
       <h1 class="qr-title">휴대폰으로<br>익명 질문하세요</h1>
       <p class="qr-url" id="url-text">…</p>
+      <p id="qr-fallback" hidden style="margin-top: 2vmin; font-size: clamp(14px, 2.2vmin, 28px); color: var(--color-danger)">QR 생성에 실패했습니다. 위 주소를 직접 입력해 주세요.</p>
       <ul class="qr-points">
         <li>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
@@ -43,7 +44,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
 <script>
 (function () {
@@ -61,25 +62,48 @@
     document.title = 'QR 접속 안내 · ' + cfg.TALK_TITLE;
   }
 
+  function fail() {
+    document.getElementById('qr-fallback').hidden = false;
+  }
+
   function draw() {
-    if (!window.QRCode) return;
-    QRCode.toDataURL(target, {
-      errorCorrectionLevel: 'M',
-      margin: 0,
-      width: 1600,
-      color: { dark: '#15171c', light: '#ffffff' },
-    }, function (err, dataUrl) {
-      if (err) return;
+    if (!window.QRCode) { fail(); return; }
+
+    // qrcodejs 는 넘겨준 요소 안에 canvas 를 그린다.
+    // 그걸 그대로 두면 .qr-box 의 크기 규칙(img/svg)이 안 먹으므로 img 로 옮긴다.
+    var holder = document.createElement('div');
+    try {
+      new QRCode(holder, {
+        text: target,
+        width: 1000,
+        height: 1000,
+        colorDark: '#15171c',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+    } catch (e) {
+      fail();
+      return;
+    }
+
+    setTimeout(function () {
+      var canvas = holder.querySelector('canvas');
+      var made = holder.querySelector('img');
+      var src = canvas ? canvas.toDataURL('image/png') : (made && made.src);
+      if (!src) { fail(); return; }
+
       var img = new Image();
-      img.src = dataUrl;
+      img.src = src;
       img.alt = 'QR 코드: ' + target;
       var box = document.getElementById('qr-box');
       box.textContent = '';
       box.appendChild(img);
-    });
+    }, 60);
   }
 
-  draw();
+  // 스크립트가 늦게 로드되는 경우까지 대비
+  if (window.QRCode) draw();
+  else window.addEventListener('load', draw);
 })();
 </script>
 </body>
