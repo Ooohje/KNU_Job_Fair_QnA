@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>강연자 모드 · Q&amp;A</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="speaker-page">
+
+<!-- ── 비밀 코드 ──────────────────────────────────────────────────────── -->
+<main class="lock" id="lock">
+  <div class="card lock-card">
+    <div class="lock-mark">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 018 0v3"></path></svg>
+    </div>
+    <h1>강연자 모드</h1>
+    <p>들어온 질문을 보려면 비밀 코드를 입력하세요.</p>
+
+    <form class="lock-form" id="lock-form" novalidate>
+      <label class="field-label" for="pc">비밀 코드</label>
+      <div class="input-wrap">
+        <input class="input" id="pc" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false">
+        <button type="button" class="icon-btn" id="pc-toggle" aria-label="비밀 코드 보기" aria-pressed="false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+
+      <p class="field-error" id="pc-error" hidden>
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5M12 16.5v.01"></path></svg>
+        <span id="pc-error-msg">코드가 올바르지 않아요. 다시 확인해 주세요.</span>
+      </p>
+
+      <button type="submit" class="btn btn-primary btn-block" id="lock-submit">입장하기</button>
+    </form>
+
+    <p class="hint">한 번 입력하면 이 기기에 저장되어 다음부터 바로 들어옵니다.</p>
+  </div>
+</main>
+
+<!-- ── 질문 리스트 ────────────────────────────────────────────────────── -->
+<div id="app" hidden>
+  <header class="s-header">
+    <div class="s-header-inner">
+      <p class="s-count">
+        <span class="s-count-label">남은 질문</span>
+        <span class="s-count-num" id="pending-num">0</span>
+        <span class="s-count-total" id="total-num">/ 전체 0</span>
+      </p>
+      <span class="live" id="live" data-state="offline" style="margin-left: auto">
+        <span class="live-dot" aria-hidden="true"></span><span id="live-label">연결 중</span>
+      </span>
+      <button type="button" class="icon-btn" id="refresh" aria-label="질문 새로고침">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7"></path><path d="M20 4v7h-7"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="s-list">
+    <ol class="s-section" id="pending-list"></ol>
+
+    <div class="all-clear" id="all-clear" hidden>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      <span>남은 질문을 모두 답변했습니다.</span>
+    </div>
+
+    <h2 class="s-divider" id="divider" hidden>
+      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      <span id="divider-label">답변 완료</span>
+    </h2>
+
+    <ol class="s-section" id="answered-list"></ol>
+
+    <div class="card empty" id="empty" hidden>
+      <div class="empty-art">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 01-11.6 7.1L4 20l.9-4.4A8 8 0 1120 12z"></path><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"></path></svg>
+      </div>
+      <h2>아직 질문이 없습니다</h2>
+      <p>청중에게 화면의 QR을 안내해 주세요.<br>질문이 들어오면 바로 여기에 표시돼요.</p>
+      <a class="btn btn-secondary" href="qr.html" target="_blank" rel="noopener">QR 화면 열기</a>
+    </div>
+  </main>
+
+  <div class="s-toolbar">
+    <div class="s-toolbar-inner">
+      <span class="s-toolbar-label">글자 크기</span>
+      <div class="stepper" role="group" aria-label="글자 크기">
+        <button type="button" class="a-small" id="font-down" aria-label="글자 작게">A−</button>
+        <output id="font-out">100%</output>
+        <button type="button" class="a-large" id="font-up" aria-label="글자 크게">A+</button>
+      </div>
+      <button type="button" class="icon-btn is-danger" id="reset" aria-label="질문 전체 초기화">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"></path></svg>
+      </button>
+      <button type="button" class="icon-btn" id="logout" aria-label="강연자 모드 나가기">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h7a2 2 0 002-2v-2"></path><path d="M18 8l4 4-4 4M22 12H10"></path></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-region" id="toasts" aria-live="polite"></div>
+
+<!-- 전체 초기화 확인 시트 -->
+<dialog class="sheet" id="reset-sheet" aria-labelledby="reset-title">
+  <div class="sheet-inner">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <h2 id="reset-title">질문을 모두 삭제할까요?</h2>
+    <p class="sheet-desc">리허설·테스트 데이터를 비울 때 사용합니다. 되돌릴 수 없어요.</p>
+    <p class="sheet-quote" id="reset-summary"></p>
+    <div class="sheet-actions">
+      <button type="button" class="btn btn-secondary" id="reset-cancel">취소</button>
+      <button type="button" class="btn btn-danger" id="reset-confirm">전체 삭제</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="db.js"></script>
+<script src="ui.js"></script>
+<script src="speaker.js"></script>
+</body>
+</html>

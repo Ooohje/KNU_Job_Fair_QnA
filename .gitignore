@@ -1,0 +1,7 @@
+# 실제 강연자 비밀 코드가 들어있는 파일 (공개 저장소에 올리지 않는다)
+supabase/set-passphrase.local.sql
+
+# OS / 편집기
+.DS_Store
+Thumbs.db
+desktop.ini

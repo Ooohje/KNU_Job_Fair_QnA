@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>강연 Q&amp;A · 익명 질문</title>
+<meta name="description" content="경북대학교 잡페어 강연 익명 Q&amp;A. 로그인 없이 질문을 남기세요.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow" id="eyebrow">경북대학교 잡페어</p>
+    <h1 class="hero-title" id="talk-title">강연 Q&amp;A</h1>
+    <p class="anon-note">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6l7-3z"></path><path d="M9 12l2 2 4-4"></path></svg>
+      <span><strong>익명으로 질문하세요.</strong> 이름도 로그인도 필요 없어요.</span>
+    </p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="질문 화면 전환">
+    <button class="tab" type="button" id="tab-ask" role="tab" aria-selected="true" aria-controls="panel-ask">질문하기</button>
+    <button class="tab" type="button" id="tab-mine" role="tab" aria-selected="false" aria-controls="panel-mine">내 질문 <span class="tab-count" id="mine-count">0</span></button>
+  </div>
+
+  <!-- ── 질문하기 ────────────────────────────────────────────────────── -->
+  <section class="tab-panel" id="panel-ask" role="tabpanel" aria-labelledby="tab-ask">
+    <form class="card compose" id="compose" novalidate>
+      <label class="field-label" for="q-body">강연자에게 묻고 싶은 것</label>
+      <textarea class="textarea" id="q-body" rows="6" maxlength="500"
+        placeholder="예) 학점이 3.2인데 서류에서 많이 불리할까요?"></textarea>
+      <div class="compose-meta">
+        <span>최대 500자</span>
+        <span class="counter" id="counter" aria-live="off">0 / 500</span>
+      </div>
+
+      <div class="alert" id="compose-alert" role="alert" hidden>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5M12 16.5v.01"></path></svg>
+        <div><strong>질문을 보내지 못했어요</strong><span id="alert-msg">연결 상태를 확인하고 다시 시도해 주세요. 작성한 내용은 그대로 있어요.</span></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn" disabled>질문 보내기</button>
+    </form>
+
+    <!-- 전송 완료 -->
+    <div class="card sent fade-in" id="sent" hidden>
+      <div class="sent-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      </div>
+      <h2>질문이 전달되었습니다</h2>
+      <p>강연자가 순서대로 확인하고 답변할 거예요.</p>
+      <p class="sent-quote" id="sent-quote"></p>
+      <div class="sent-actions">
+        <button type="button" class="btn btn-primary btn-block" id="ask-again">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          질문 더 남기기
+        </button>
+        <button type="button" class="btn btn-ghost btn-block" id="goto-mine">내 질문 보기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 내 질문 ─────────────────────────────────────────────────────── -->
+  <section class="tab-panel" id="panel-mine" role="tabpanel" aria-labelledby="tab-mine" hidden>
+    <ul class="list" id="my-list"></ul>
+    <p class="list-note" id="mine-note" hidden>이 기기에서 보낸 질문만 표시됩니다.</p>
+
+    <div class="card empty" id="mine-empty" hidden>
+      <div class="empty-art">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 01-11.6 7.1L4 20l.9-4.4A8 8 0 1120 12z"></path><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"></path></svg>
+      </div>
+      <h2>아직 보낸 질문이 없어요</h2>
+      <p>궁금한 점이 있다면 첫 질문을 남겨보세요.<br>누가 보냈는지는 표시되지 않아요.</p>
+      <button type="button" class="btn btn-primary" id="empty-cta">질문하러 가기</button>
+    </div>
+  </section>
+</main>
+
+<div class="toast-region" id="toasts" aria-live="polite"></div>
+
+<!-- 삭제 확인 시트 -->
+<dialog class="sheet" id="del-sheet" aria-labelledby="del-title">
+  <div class="sheet-inner">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <h2 id="del-title">이 질문을 삭제할까요?</h2>
+    <p class="sheet-desc">강연자 화면에서도 사라지며 되돌릴 수 없어요.</p>
+    <p class="sheet-quote" id="del-quote"></p>
+    <div class="sheet-actions">
+      <button type="button" class="btn btn-secondary" id="del-cancel">취소</button>
+      <button type="button" class="btn btn-danger" id="del-confirm">삭제</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="db.js"></script>
+<script src="ui.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>QR 접속 안내 · 강연 Q&amp;A</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="qr-page">
+  <div class="qr-layout">
+    <div class="qr-box" id="qr-box">
+      <!-- QR 이 그려지기 전 자리 표시 -->
+      <svg viewBox="0 0 100 100" role="img" aria-label="QR 코드">
+        <rect width="100" height="100" fill="#fff"></rect>
+        <g fill="none" stroke="#c9ced6" stroke-width="5"><rect x="4.5" y="4.5" width="23" height="23" rx="2"></rect><rect x="72.5" y="4.5" width="23" height="23" rx="2"></rect><rect x="4.5" y="72.5" width="23" height="23" rx="2"></rect></g>
+      </svg>
+    </div>
+
+    <div class="qr-copy">
+      <p class="qr-kicker" id="kicker">경북대학교 잡페어 · 강연 Q&amp;A</p>
+      <h1 class="qr-title">휴대폰으로<br>익명 질문하세요</h1>
+      <p class="qr-url" id="url-text">…</p>
+      <ul class="qr-points">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          로그인 없음
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          이름 없음
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          언제든 질문 가능
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function () {
+  'use strict';
+  var cfg = window.QNA_CONFIG || {};
+
+  // 접속 주소: config.js 의 PUBLIC_URL, 없으면 이 페이지와 같은 폴더의 index.html
+  var target = cfg.PUBLIC_URL || new URL('index.html', location.href).href;
+
+  document.getElementById('url-text').textContent =
+    target.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+  if (cfg.TALK_TITLE) {
+    document.getElementById('kicker').textContent = cfg.TALK_TITLE;
+    document.title = 'QR 접속 안내 · ' + cfg.TALK_TITLE;
+  }
+
+  function draw() {
+    if (!window.QRCode) return;
+    QRCode.toDataURL(target, {
+      errorCorrectionLevel: 'M',
+      margin: 0,
+      width: 1600,
+      color: { dark: '#15171c', light: '#ffffff' },
+    }, function (err, dataUrl) {
+      if (err) return;
+      var img = new Image();
+      img.src = dataUrl;
+      img.alt = 'QR 코드: ' + target;
+      var box = document.getElementById('qr-box');
+      box.textContent = '';
+      box.appendChild(img);
+    });
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>
